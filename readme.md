@@ -125,43 +125,48 @@ You can run the Wagtail demo locally without setting up Vagrant or Docker and si
 
 #### Dependencies
 
-- Python 3.7, 3.8, 3.9, 3.10 or 3.11
-- [Virtualenv](https://virtualenv.pypa.io/en/stable/installation/)
+- Python 3.10, 3.11, 3.12 or 3.13
+- [Virtualenv](https://virtualenv.pypa.io/en/stable/installation.html)
 - [VirtualenvWrapper](https://virtualenvwrapper.readthedocs.io/en/latest/install.html) (optional)
 
 ### Installation
 
 With [PIP](https://github.com/pypa/pip) and [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/)
 installed, run:
-
-    mkvirtualenv wagtailbakerydemo
-    python --version
+```bash
+mkvirtualenv wagtailbakerydemo
+python --version
+```
 
 Confirm that this is showing a compatible version of Python 3.x. If not, and you have multiple versions of Python installed on your system, you may need to specify the appropriate version when creating the virtualenv:
-
-    deactivate
-    rmvirtualenv wagtailbakerydemo
-    mkvirtualenv wagtailbakerydemo --python=python3.9
-    python --version
+```bash
+deactivate
+rmvirtualenv wagtailbakerydemo
+mkvirtualenv wagtailbakerydemo --python=python3.12
+python --version
+```
 
 Now we're ready to set up the bakery demo project itself:
+```bash
+cd ~/dev [or your preferred dev directory]
+git clone https://github.com/wagtail/bakerydemo.git
+cd bakerydemo
+pip install -r requirements/development.txt
+```
 
-    cd ~/dev [or your preferred dev directory]
-    git clone https://github.com/wagtail/bakerydemo.git
-    cd bakerydemo
-    pip install -r requirements/development.txt
-
-Next, we'll set up our local environment variables. We use [django-dotenv](https://github.com/jpadilla/django-dotenv)
-to help with this. It reads environment variables located in a file name `.env` in the top level directory of the project. The only variable we need to start is `DJANGO_SETTINGS_MODULE`:
-
-    cp bakerydemo/settings/local.py.example bakerydemo/settings/local.py
-    cp .env.example .env
+Next, we need to create the files `.env` and `bakerydemo/settings/local.py`, which provide a place for local configuration settings that need to be kept outside of version control. No such settings are required for a standard installation, but warnings will be displayed if these files are not present:
+```bash
+cp bakerydemo/settings/local.py.example bakerydemo/settings/local.py
+cp .env.example .env
+# `cp` is used for bash. Windows Command Prompt uses `copy`
+```
 
 To set up your database and load initial data, run the following commands:
-
-    ./manage.py migrate
-    ./manage.py load_initial_data
-    ./manage.py runserver
+```bash
+./manage.py migrate
+./manage.py load_initial_data
+./manage.py runserver
+```
 
 Log into the admin with the credentials `admin / changeme`.
 
@@ -187,6 +192,12 @@ Please optimize any included images to 1200px wide with JPEG compression at 60%.
 Make a pull request to https://github.com/wagtail/bakerydemo
 
 # Other notes
+
+### Local configuration files
+
+The `bakerydemo/settings/local.py` file can be used to store local Django settings such as database connection details that need to be kept outside of version control.
+
+Additionally, various settings can be controlled through environment variables. The [django-dotenv](https://github.com/jpadilla/django-dotenv) package is used to load these variables from a `.env` file in the project root.
 
 ### Note on demo search
 
@@ -218,6 +229,15 @@ By default, `django-csp` is not enabled since Wagtail isn't fully compatible yet
 
 The `main` branch of this demo is designed to work with both the latest stable release and the latest `main` branch (development version) of Wagtail. To run the demo against a specific version of Wagtail, we have created [git tags](https://github.com/wagtail/bakerydemo/tags) for the latest commits that work with each feature release.
 
+- [`v6.2`](https://github.com/wagtail/bakerydemo/releases/tag/v6.2)
+- [`v6.1`](https://github.com/wagtail/bakerydemo/releases/tag/v6.1)
+- [`v6.0`](https://github.com/wagtail/bakerydemo/releases/tag/v6.0)
+- [`v5.2`](https://github.com/wagtail/bakerydemo/releases/tag/v5.2)
+
+<details>
+
+<summary>Older tags</summary>
+
 - [`v5.1`](https://github.com/wagtail/bakerydemo/releases/tag/v5.1)
 - [`v5.0`](https://github.com/wagtail/bakerydemo/releases/tag/v5.0)
 - [`v4.2`](https://github.com/wagtail/bakerydemo/releases/tag/v4.2)
@@ -225,6 +245,8 @@ The `main` branch of this demo is designed to work with both the latest stable r
 - [`v4.0`](https://github.com/wagtail/bakerydemo/releases/tag/v4.0)
 - [`v3.0`](https://github.com/wagtail/bakerydemo/releases/tag/v3.0)
 - [`v2.16`](https://github.com/wagtail/bakerydemo/releases/tag/v2.16)
+
+</details>
 
 The tags point to the last commit just before the requirements were updated to the next Wagtail version. For example, the `v4.2` tag points to the commit just before the bakerydemo was updated to use Wagtail 5.0. This ensures that the tagged demo code contains the latest updates possible for the supported version.
 
